@@ -1,56 +1,57 @@
-import * as esbuild from "esbuild-wasm";
-import { useState, useEffect, useRef } from "react";
+import "bulmaswatch/superhero/bulmaswatch.min.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import ReactDOM from "react-dom";
-import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
+import { useEffect } from "react";
+import axios from "axios";
+import CellList from "./components/cell-list";
+import AuthForm from "./components/auth-form";
+import { Provider } from "react-redux";
+import { store } from "./redux";
+import { useActions } from "./hooks/use-actions";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 const App = () => {
-  const ref = useRef<any>();
-  const [input, setInput] = useState("");
-  const [code, setCode] = useState("");
-
-  const startService = async () => {
-    ref.current = await esbuild.startService({
-      worker: true,
-      wasmURL: "/esbuild.wasm",
-    });
-  };
+  const { setUser } = useActions();
   useEffect(() => {
-    startService();
+    (async () => {
+      const { data } = await axios.get(
+        `${
+          process.env.SERVER_URL || "http://localhost:3005"
+        }/api/auth/current-user`,
+        {
+          withCredentials: true,
+        }
+      );
+      if (data.currentUser) {
+        setUser(data.currentUser);
+      }
+    })();
   }, []);
-
-  const onClick = async () => {
-    if (!ref.current) {
-      return;
-    }
-
-    const result = await ref.current.build({
-      entryPoints: ["index.js"],
-      bundle: true,
-      write: false,
-      plugins: [unpkgPathPlugin(input)],
-      define: {
-        "process.env.NODE_ENV": '"production"',
-        global: "window",
-      },
-    });
-
-    // console.log(result);
-
-    setCode(result.outputFiles[0].text);
-  };
-
   return (
-    <div>
-      <textarea
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      ></textarea>
-      <div>
-        <button onClick={onClick}>Submit</button>
-      </div>
-      <pre>{code}</pre>
-    </div>
+    <Router>
+      <Switch>
+        <Route exact path="/" component={CellList} />
+        <Route
+          component={() => <AuthForm formType="signin" />}
+          exact
+          path="/signin"
+        ></Route>
+        <Route exact path="/signup">
+          <AuthForm formType="signup" />
+        </Route>
+      </Switch>
+
+      {/* <div>
+        <CellList />
+      </div> */}
+    </Router>
   );
 };
 
-ReactDOM.render(<App />, document.querySelector("#root"));
+ReactDOM.render(
+  <Provider store={store}>
+    {" "}
+    <App />{" "}
+  </Provider>,
+  document.querySelector("#root")
+);

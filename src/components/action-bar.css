@@ -1,0 +1,10 @@
+.action-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.action-bar button {
+  transition: 0.4s ease;
+}

@@ -1,0 +1,31 @@
+.field {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.form-background {
+  width: 100%;
+  background-image: url("https://thumbs.dreamstime.com/b/desktop-source-code-technology-background-developer-programer-coding-programming-wallpaper-computer-language-virus-124934719.jpg");
+  background-size: cover;
+  z-index: 1;
+  height: 100vh;
+  position: relative;
+}
+
+.form-wrapper {
+  padding: 1rem;
+  position: absolute;
+  left: 70%;
+  right: 0;
+  width: 30%;
+  background-color: #37414b;
+  z-index: 99;
+  height: 100vh;
+}
+@media only screen and (max-width: 800px) {
+  .form-wrapper {
+    width: 100vw;
+    left: 0;
+    padding: 0.5rem;
+  }
+}
