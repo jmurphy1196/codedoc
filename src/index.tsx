@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import CellList from "./components/cell-list";
 import AuthForm from "./components/auth-form";
+import MyAccount from "./components/my-account";
 import { Provider } from "react-redux";
 import { store } from "./redux";
 import { useActions } from "./hooks/use-actions";
@@ -30,14 +31,17 @@ const App = () => {
   return (
     <Router>
       <Switch>
-        <Route exact path="/" component={CellList} />
+        <Route exact path='/' component={CellList} />
         <Route
-          component={() => <AuthForm formType="signin" />}
+          component={() => <AuthForm formType='signin' />}
           exact
-          path="/signin"
+          path='/signin'
         ></Route>
-        <Route exact path="/signup">
-          <AuthForm formType="signup" />
+        <Route exact path='/signup'>
+          <AuthForm formType='signup' />
+        </Route>
+        <Route exact path='/my-account'>
+          <MyAccount />
         </Route>
       </Switch>
 

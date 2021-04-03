@@ -11,6 +11,7 @@ import {
 import bundle from "../../bundler/index";
 import { CellType } from "../cell";
 import axios from "axios";
+import { History } from "history";
 
 export const updateCell = (id: string, content: string): UpdateCellAction => {
   return {
@@ -148,5 +149,21 @@ export const signout = () => {
 
   return {
     type: ActionType.SIGN_OUT,
+  };
+};
+
+export const getCodeDoc = (codeDoc: string, history: History) => {
+  return async (dispatch: Dispatch<Action>) => {
+    const { data } = await axios.get(
+      `${
+        process.env.SERVER_URL || "http://localhost:3005"
+      }/api/codedoc/${codeDoc}`,
+      {
+        withCredentials: true,
+      }
+    );
+
+    console.log(data);
+    history.push("/");
   };
 };
