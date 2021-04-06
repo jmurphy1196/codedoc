@@ -111,7 +111,8 @@ export const signinOrSignup = (
       let response;
       if (!confirmPassword) {
         response = await axios.post(
-          process.env.SERVER_URL || "http://localhost:3005/api/auth/signin",
+          process.env.SERVER_URL ||
+            "https://code-doc-backend.herokuapp.com/api/auth/signin",
           { email, password },
           {
             withCredentials: true,
@@ -119,7 +120,8 @@ export const signinOrSignup = (
         );
       } else {
         response = await axios.post(
-          process.env.SERVER_URL || "http://localhost:3005/api/auth/signup",
+          process.env.SERVER_URL ||
+            "https://code-doc-backend.herokuapp.com/api/auth/signup",
           { email, password, confirmPassword },
           {
             withCredentials: true,
@@ -171,7 +173,9 @@ export const signinOrSignup = (
 
 export const signout = () => {
   const response = axios.post(
-    `${process.env.SERVER_URL || "http://localhost:3005"}/api/auth/signout`,
+    `${
+      process.env.SERVER_URL || "https://code-doc-backend.herokuapp.com"
+    }/api/auth/signout`,
     {},
     { withCredentials: true }
   );
@@ -193,7 +197,7 @@ export const getCodeDoc = (
       if (!isShared) {
         response = await axios.get(
           `${
-            process.env.SERVER_URL || "http://localhost:3005"
+            process.env.SERVER_URL || "https://code-doc-backend.herokuapp.com"
           }/api/codedoc/${codeDoc}`,
           {
             withCredentials: true,
@@ -202,7 +206,7 @@ export const getCodeDoc = (
       } else {
         response = await axios.get(
           `${
-            process.env.SERVER_URL || "http://localhost:3005"
+            process.env.SERVER_URL || "https://code-doc-backend.herokuapp.com"
           }/api/codedoc/share/${sharedUserId}/${codeDoc}`,
           {
             withCredentials: true,
@@ -262,7 +266,7 @@ export const saveCodeDoc = (codeDoc: codeDocState, documentName: string) => {
   return async (dispatch: Dispatch<Action>) => {
     const { data } = await axios.post(
       `${
-        process.env.SERVER_URL || "http://localhost:3005"
+        process.env.SERVER_URL || "https://code-doc-backend.herokuapp.com"
       }/api/codedoc/save-code-doc`,
       {
         codeDoc,
@@ -277,7 +281,9 @@ export const saveCodeDoc = (codeDoc: codeDocState, documentName: string) => {
 export const getUserCodeDocs = () => {
   return async (dispatch: Dispatch<Action>) => {
     const { data } = await axios.get(
-      `${process.env.SERVER_URL || "http://localhost:3005"}/api/codedoc`,
+      `${
+        process.env.SERVER_URL || "https://code-doc-backend.herokuapp.com"
+      }/api/codedoc`,
       { withCredentials: true }
     );
 
@@ -294,7 +300,7 @@ export const deleteCodeDoc = (documentName: string) => {
   return async (dispatch: Dispatch<Action>) => {
     const { data } = await axios.post(
       `${
-        process.env.SERVER_URL || "http://localhost:3005"
+        process.env.SERVER_URL || "https://code-doc-backend.herokuapp.com"
       }/api/codedoc/remove-code-doc`,
       { documentName },
       { withCredentials: true }

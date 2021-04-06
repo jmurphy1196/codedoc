@@ -19,7 +19,7 @@ const App = () => {
     (async () => {
       const { data } = await axios.get(
         `${
-          process.env.SERVER_URL || "http://localhost:3005"
+          process.env.SERVER_URL || "https://code-doc-backend.herokuapp.com"
         }/api/auth/current-user`,
         {
           withCredentials: true,
