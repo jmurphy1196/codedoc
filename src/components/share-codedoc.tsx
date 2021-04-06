@@ -5,7 +5,6 @@ interface ShareCodeDocProps {
   setModalState: any;
 }
 
-
 const ShareCodeDoc: React.FC<ShareCodeDocProps> = ({ setModalState }) => {
   const user = useTypedSelector((state) => state.user.id);
   let documentName = useTypedSelector((state) => state.user.currentDoc);
@@ -34,7 +33,7 @@ const ShareCodeDoc: React.FC<ShareCodeDocProps> = ({ setModalState }) => {
         </header>
         <section className='modal-card-body'>
           {documentName ? (
-            <h1>{`http://localhost:3000/${user}/${documentName}`}</h1>
+            <h1>{`https://adoring-meitner-4b38b9.netlify.app/${user}/${documentName}`}</h1>
           ) : (
             <h1>You must save your codeDoc before sharing</h1>
           )}
