@@ -1,0 +1,26 @@
+.view-icon {
+  transition: all 0.4s;
+  opacity: 0.5;
+}
+
+.panel-block:hover .panel-icon .view-icon {
+  color: white;
+  opacity: 1;
+}
+
+.remove-icon {
+  opacity: 0.5;
+  transition: all 0.4s;
+  padding: 3px;
+}
+
+.remove-icons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.panel-block:hover span .remove-icon {
+  opacity: 1;
+  color: white;
+  background-color: red;
+}

@@ -72,7 +72,9 @@ const reducer: Reducer<CellState, Action> = produce(
         return state;
 
       case ActionType.LOAD_CODEDOC:
-        state.data = action.payload;
+        const { data, order } = action.payload;
+        state.data = data;
+        state.order = order;
         return state;
       default:
         break;

@@ -13,28 +13,25 @@ interface CodeCellProps {
 }
 
 const CodeCell: React.FC<CodeCellProps> = ({ cell: { id, content } }) => {
-  const { updateCell, createBundle } = useActions();
+  const { updateCell, createBundle, clearUserError } = useActions();
   const bundle = useTypedSelector((state) => state.bundles[id]);
   const cumulativeCode = useCumulativeCode(id);
 
   useEffect(() => {
     let codeBundlerTimer: any;
-    if (bundle === undefined) {
-      createBundle(id, content);
-      return;
-    }
     codeBundlerTimer = setTimeout(async () => {
       createBundle(id, cumulativeCode);
     }, 750);
 
     return () => {
       clearTimeout(codeBundlerTimer);
+      clearUserError();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content, id, createBundle, cumulativeCode]);
 
   return (
-    <Resizable direction="vertical">
+    <Resizable direction='vertical'>
       <div
         style={{
           height: "calc(100% - 15px)",
@@ -42,16 +39,16 @@ const CodeCell: React.FC<CodeCellProps> = ({ cell: { id, content } }) => {
           flexDirection: "row",
         }}
       >
-        <Resizable direction="horizontal">
+        <Resizable direction='horizontal'>
           <CodeEditor
             initialValue={content}
             onChange={(value) => updateCell(id, value)}
           />
         </Resizable>
-        <div className="progress-wrapper">
+        <div className='progress-wrapper'>
           {!bundle || bundle.loading ? (
-            <div className="progress-cover">
-              <progress className="progress is-small is-primary" max="100">
+            <div className='progress-cover'>
+              <progress className='progress is-small is-primary' max='100'>
                 Loading
               </progress>
             </div>

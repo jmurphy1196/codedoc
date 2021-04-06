@@ -14,4 +14,6 @@ export enum ActionType {
   LOAD_CODEDOC = "load_codedoc",
   SET_USER_ERROR = "set_user_error",
   CLEAR_USER_ERROR = "clear_user_error",
+  GET_CODEDOCS = "get_codedocs",
+  DELETE_CODEDOC = "delete_codedoc",
 }

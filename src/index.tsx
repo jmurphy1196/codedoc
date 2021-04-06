@@ -6,10 +6,12 @@ import axios from "axios";
 import CellList from "./components/cell-list";
 import AuthForm from "./components/auth-form";
 import MyAccount from "./components/my-account";
+import Documentation from "./components/documentation";
 import { Provider } from "react-redux";
 import { store } from "./redux";
 import { useActions } from "./hooks/use-actions";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Navbar from "./components/navbar";
 
 const App = () => {
   const { setUser } = useActions();
@@ -31,7 +33,6 @@ const App = () => {
   return (
     <Router>
       <Switch>
-        <Route exact path='/' component={CellList} />
         <Route
           component={() => <AuthForm formType='signin' />}
           exact
@@ -43,6 +44,12 @@ const App = () => {
         <Route exact path='/my-account'>
           <MyAccount />
         </Route>
+        <Route exact path='/documentation'>
+          <Navbar>
+            <Documentation />
+          </Navbar>
+        </Route>
+        <Route path='/' component={CellList} />
       </Switch>
 
       {/* <div>

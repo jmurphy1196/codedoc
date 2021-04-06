@@ -13,6 +13,8 @@ import { CellType } from "../cell";
 import axios from "axios";
 import { History } from "history";
 
+import { Cell } from "../cell";
+
 export const updateCell = (id: string, content: string): UpdateCellAction => {
   return {
     type: ActionType.UPDATE_CELL,
@@ -92,7 +94,11 @@ export const setUser = (user: User) => {
   };
 };
 
-export const signin = (email: string, password: string) => {
+export const signinOrSignup = (
+  email: string,
+  password: string,
+  confirmPassword: string | null = null
+) => {
   return async (dispatch: Dispatch<Action>) => {
     dispatch({
       type: ActionType.LOADING_USER,
@@ -102,15 +108,26 @@ export const signin = (email: string, password: string) => {
     });
 
     try {
-      const response = await axios.post(
-        process.env.SERVER_URL || "http://localhost:3005/api/auth/signin",
-        { email, password },
-        {
-          withCredentials: true,
-        }
-      );
+      let response;
+      if (!confirmPassword) {
+        response = await axios.post(
+          process.env.SERVER_URL || "http://localhost:3005/api/auth/signin",
+          { email, password },
+          {
+            withCredentials: true,
+          }
+        );
+      } else {
+        response = await axios.post(
+          process.env.SERVER_URL || "http://localhost:3005/api/auth/signup",
+          { email, password, confirmPassword },
+          {
+            withCredentials: true,
+          }
+        );
+      }
       const { data } = response;
-      console.log(response);
+      console.log(data);
       if (data.email) {
         dispatch({
           type: ActionType.CLEAR_USER_ERROR,
@@ -135,6 +152,18 @@ export const signin = (email: string, password: string) => {
           type: ActionType.SET_USER_ERROR,
           payload: JSON.parse(err.request.response),
         });
+      } else {
+        dispatch({
+          type: ActionType.SET_USER_ERROR,
+          payload: {
+            errors: [
+              {
+                message: "Network error",
+                code: 500,
+              },
+            ],
+          },
+        });
       }
     }
   };
@@ -152,18 +181,140 @@ export const signout = () => {
   };
 };
 
-export const getCodeDoc = (codeDoc: string, history: History) => {
+export const getCodeDoc = (
+  codeDoc: string,
+  history: History | null = null,
+  isShared = false,
+  sharedUserId: string | null = null
+) => {
   return async (dispatch: Dispatch<Action>) => {
-    const { data } = await axios.get(
+    let response;
+    try {
+      if (!isShared) {
+        response = await axios.get(
+          `${
+            process.env.SERVER_URL || "http://localhost:3005"
+          }/api/codedoc/${codeDoc}`,
+          {
+            withCredentials: true,
+          }
+        );
+      } else {
+        response = await axios.get(
+          `${
+            process.env.SERVER_URL || "http://localhost:3005"
+          }/api/codedoc/share/${sharedUserId}/${codeDoc}`,
+          {
+            withCredentials: true,
+          }
+        );
+      }
+      const { data } = response;
+
+      console.log(data);
+      if (!data.errors) {
+        dispatch({
+          type: ActionType.LOAD_CODEDOC,
+          payload: {
+            data: data.data,
+            order: data.order,
+            currentDoc: codeDoc,
+          },
+        });
+        if (history) {
+          history.push("/");
+        }
+      }
+    } catch (err) {
+      console.log("THERE WAS AN ERROR");
+      if (err.response?.data) {
+        dispatch({
+          type: ActionType.SET_USER_ERROR,
+          payload: {
+            errors: err.response.data.errors,
+          },
+        });
+      } else {
+        dispatch({
+          type: ActionType.SET_USER_ERROR,
+          payload: {
+            errors: [
+              {
+                message: err.toJSON().message,
+                code: 500,
+              },
+            ],
+          },
+        });
+      }
+    }
+  };
+};
+
+interface codeDocState {
+  order: string[];
+  data: {
+    [key: string]: Cell;
+  };
+}
+
+export const saveCodeDoc = (codeDoc: codeDocState, documentName: string) => {
+  return async (dispatch: Dispatch<Action>) => {
+    const { data } = await axios.post(
       `${
         process.env.SERVER_URL || "http://localhost:3005"
-      }/api/codedoc/${codeDoc}`,
+      }/api/codedoc/save-code-doc`,
       {
-        withCredentials: true,
-      }
+        codeDoc,
+        documentName,
+      },
+      { withCredentials: true }
+    );
+    console.log(data);
+  };
+};
+
+export const getUserCodeDocs = () => {
+  return async (dispatch: Dispatch<Action>) => {
+    const { data } = await axios.get(
+      `${process.env.SERVER_URL || "http://localhost:3005"}/api/codedoc`,
+      { withCredentials: true }
     );
 
-    console.log(data);
-    history.push("/");
+    if (!data.errors) {
+      dispatch({
+        type: ActionType.GET_CODEDOCS,
+        payload: data,
+      });
+    }
+  };
+};
+
+export const deleteCodeDoc = (documentName: string) => {
+  return async (dispatch: Dispatch<Action>) => {
+    const { data } = await axios.post(
+      `${
+        process.env.SERVER_URL || "http://localhost:3005"
+      }/api/codedoc/remove-code-doc`,
+      { documentName },
+      { withCredentials: true }
+    );
+    if (!data.errors) {
+      dispatch({
+        type: ActionType.DELETE_CODEDOC,
+        payload: {
+          documentName,
+        },
+      });
+    }
+  };
+};
+
+export const clearUserError = () => {
+  return {
+    type: ActionType.CLEAR_USER_ERROR,
+    payload: {
+      errors: [],
+    },
   };
 };

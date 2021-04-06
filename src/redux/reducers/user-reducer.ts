@@ -9,6 +9,7 @@ interface UserState {
   codeDocs: string[];
   errors: UserError[];
   email: string | null;
+  currentDoc: string | null;
 }
 
 const initialState: UserState = {
@@ -17,6 +18,7 @@ const initialState: UserState = {
   codeDocs: [],
   errors: [],
   email: null,
+  currentDoc: null,
 };
 
 const reducer: Reducer<UserState, Action> = produce(
@@ -55,6 +57,7 @@ const reducer: Reducer<UserState, Action> = produce(
         const { codeDoc } = action.payload;
         state.loading = false;
         state.codeDocs = [...state.codeDocs, codeDoc];
+        state.currentDoc = codeDoc;
         return state;
       }
       case ActionType.SET_USER_ERROR: {
@@ -70,6 +73,25 @@ const reducer: Reducer<UserState, Action> = produce(
       }
       case ActionType.CLEAR_USER_ERROR: {
         state.errors = [];
+        return state;
+      }
+      case ActionType.GET_CODEDOCS: {
+        state.codeDocs = action.payload;
+        return state;
+      }
+      case ActionType.LOAD_CODEDOC: {
+        const { currentDoc } = action.payload;
+        state.currentDoc = currentDoc;
+        return state;
+      }
+      case ActionType.DELETE_CODEDOC: {
+        const { documentName } = action.payload;
+        const codeDocInd = state.codeDocs.findIndex(
+          (doc) => doc === documentName
+        );
+        if (codeDocInd !== -1) {
+          state.codeDocs.splice(codeDocInd, 1);
+        }
         return state;
       }
       default:

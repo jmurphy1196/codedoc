@@ -86,7 +86,11 @@ export interface SaveCodeDoc {
 export interface LoadCodeDoc {
   type: ActionType.LOAD_CODEDOC;
   payload: {
-    [cellId: string]: Cell;
+    order: string[];
+    data: {
+      [key: string]: Cell;
+    };
+    currentDoc: string;
   };
 }
 export interface UserError {
@@ -116,6 +120,18 @@ export interface ClearUserError {
   };
 }
 
+export interface GetCodeDocs {
+  type: ActionType.GET_CODEDOCS;
+  payload: string[];
+}
+
+export interface DeleteCodeDoc {
+  type: ActionType.DELETE_CODEDOC;
+  payload: {
+    documentName: string;
+  };
+}
+
 export type Action =
   | MoveCellAction
   | DeleteCellAction
@@ -131,4 +147,6 @@ export type Action =
   | LoadCodeDoc
   | SetUserErrors
   | ClearLoadingUser
-  | ClearUserError;
+  | ClearUserError
+  | GetCodeDocs
+  | DeleteCodeDoc;
