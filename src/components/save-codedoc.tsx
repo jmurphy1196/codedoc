@@ -18,6 +18,9 @@ const SaveCodedoc: React.FC<SaveCodeDocProps> = ({ setModalState }) => {
   const [input, setInput] = useState(currentDoc || "");
   const { saveCodeDoc } = useActions();
 
+  const alphanumericAndSpaceEx = /^[a-z\d\-_\s]+$/i;
+  const disabled = !alphanumericAndSpaceEx.test(input) && input.length >= 4;
+
   const modal = useRef<any>();
   const closeModal = () => {
     modal.current.classList.toggle("is-active");
@@ -36,6 +39,9 @@ const SaveCodedoc: React.FC<SaveCodeDocProps> = ({ setModalState }) => {
       <div className='modal-card'>
         <header className='modal-card-head'>
           <p className='modal-card-title'> Save CodeDoc </p>
+          <p>
+            use alphanumeric characters and spaces only, at least 4 characters
+          </p>
           <button
             onClick={closeModal}
             className='delete'
@@ -63,7 +69,7 @@ const SaveCodedoc: React.FC<SaveCodeDocProps> = ({ setModalState }) => {
         <footer className='modal-card-foot'>
           <button
             onClick={handleSaveCodeDoc}
-            disabled={input.length < 3}
+            disabled={disabled}
             className='button is-success'
           >
             Save changes

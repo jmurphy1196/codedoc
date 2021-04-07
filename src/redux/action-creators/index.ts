@@ -166,6 +166,10 @@ export const signinOrSignup = (
             ],
           },
         });
+        dispatch({
+          type: ActionType.CLEAR_LOADING_USER,
+          payload: { loading: false },
+        });
       }
     }
   };
@@ -274,7 +278,15 @@ export const saveCodeDoc = (codeDoc: codeDocState, documentName: string) => {
       },
       { withCredentials: true }
     );
-    console.log(data);
+
+    if (!data.errors) {
+      dispatch({
+        type: ActionType.SAVE_CODEDOC,
+        payload: {
+          codeDoc: documentName,
+        },
+      });
+    }
   };
 };
 

@@ -23,6 +23,20 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType }) => {
   const validEmail = emailValidEx.test(email.toLowerCase());
   const validPassword = passwordValidEx.test(password);
 
+  let disabled = true;
+  if (formType === "signin" && validEmail && validPassword) {
+    disabled = false;
+  }
+
+  if (
+    formType === "signup" &&
+    validEmail &&
+    validPassword &&
+    confirmPassword === password
+  ) {
+    disabled = false;
+  }
+
   useEffect(() => {
     if (user.id && !errors.length) {
       history.push("/");
@@ -138,22 +152,12 @@ const AuthForm: React.FC<AuthFormProps> = ({ formType }) => {
           )}
           <div className='field'>
             <div className='control'>
-              {formType === "signin" ? (
-                <button
-                  type='submit'
-                  disabled={!validEmail || !validPassword}
-                  className='button is-link'
-                >
-                  Submit
-                </button>
+              {loading ? (
+                <progress className='progress is-primary' max='100'></progress>
               ) : (
                 <button
                   type='submit'
-                  disabled={
-                    !validEmail ||
-                    !validPassword ||
-                    confirmPassword !== password
-                  }
+                  disabled={disabled}
                   className='button is-link'
                 >
                   Submit
