@@ -39,6 +39,7 @@ const SaveCodedoc: React.FC<SaveCodeDocProps> = ({ setModalState }) => {
       <div className='modal-card'>
         <header className='modal-card-head'>
           <p className='modal-card-title'> Save CodeDoc </p>
+          <br />
           <p>
             use alphanumeric characters and spaces only, at least 4 characters
           </p>
