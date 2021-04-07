@@ -46,6 +46,7 @@ const SaveCodedoc: React.FC<SaveCodeDocProps> = ({ setModalState }) => {
           ></button>
         </header>
         <section className='modal-card-body'>
+          <p>use alphanumeric characters and spaces only</p>
           {currentDoc ? (
             <input
               defaultValue={currentDoc}
@@ -64,7 +65,6 @@ const SaveCodedoc: React.FC<SaveCodeDocProps> = ({ setModalState }) => {
           )}
         </section>
         <footer className='modal-card-foot'>
-          <p>use alphanumeric characters and space only</p>
           <button
             onClick={handleSaveCodeDoc}
             disabled={disabled}
