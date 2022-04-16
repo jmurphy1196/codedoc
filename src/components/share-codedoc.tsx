@@ -19,6 +19,13 @@ const ShareCodeDoc: React.FC<ShareCodeDocProps> = ({ setModalState }) => {
     setModalState(false);
   };
 
+  const copyURL = async () => {
+    const url = `https://adoring-meitner-4b38b9.netlify.app/${user}/${documentName}`
+
+    await navigator.clipboard.writeText(url);
+
+  }
+
   return (
     <div ref={modal} className='modal is-active'>
       <div className='modal-background'></div>
@@ -37,6 +44,7 @@ const ShareCodeDoc: React.FC<ShareCodeDocProps> = ({ setModalState }) => {
           ) : (
             <h1>You must save your codeDoc before sharing</h1>
           )}
+          <button style={{'marginTop': '1rem'}} className="button is-primary" onClick={copyURL}>Copy Link</button>
         </section>
         <footer className='modal-card-foot'>
           <button onClick={closeModal} className='button'>
